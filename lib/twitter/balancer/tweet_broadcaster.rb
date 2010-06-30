@@ -13,13 +13,17 @@ class TweetBroadcaster
     end
   end
 
+  def publish(tweet)
+    @channel.push tweet
+  end
+
   def start
     stream = Twitter::JSONStream.connect(
       :path    => '/1/statuses/filter.json?track=football',
       :auth    => 'LOGIN:PASSWORD'
-   )
+    )
 
-    stream.each_item { |item| @channel.push item }
+    stream.each_item { |item| publish item }
     stream.on_error { |message| puts message }
     stream.on_max_reconnects do |timeout, retries|
       raise "Failed reconnecting with #{timeout} after #{retries}"

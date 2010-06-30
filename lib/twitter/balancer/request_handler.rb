@@ -1,7 +1,6 @@
 class RequestHandler < EM::P::HeaderAndContentProtocol
 
-  def initialize(options={})
-    super
+  def initialize(options)
     @tweet_broadcaster = options[:tweet_broadcaster]
   end
 
@@ -12,6 +11,8 @@ class RequestHandler < EM::P::HeaderAndContentProtocol
       "\r\n"
     ]
     send_data response.join("\r\n")
+
+    @tweet_broadcaster.subscribe(self)
   end
 
 end

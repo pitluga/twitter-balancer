@@ -36,4 +36,18 @@ class TweetBroadcasterTest < Test::Unit::TestCase
     should "log errors"
     should "handle failing reconects, how?"
   end
+
+  context "publish" do
+    should "push tweets into the channel" do
+      EM.run do
+        broadcaster = TweetBroadcaster.new
+        sink = DataSink.new
+        broadcaster.subscribe(sink)
+
+        broadcaster.publish "hello"
+        assert_equal ["hello", "\r"], sink.sent_data
+        EM.stop
+      end
+    end
+  end
 end
