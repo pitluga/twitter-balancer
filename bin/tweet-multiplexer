@@ -1,0 +1,6 @@
+#!/bin/env ruby
+
+require 'rubygems'
+require 'tweet-multiplexer'
+
+TweetMultiplexer::Server.start
