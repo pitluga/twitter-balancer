@@ -1,8 +1,9 @@
 class DataSink
-  attr_reader :sent_data
+  attr_reader :sent_data, :signature
 
   def initialize
     @sent_data = []
+    @signature = rand
   end
 
   def send_data(data)

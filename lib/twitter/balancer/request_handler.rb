@@ -1,6 +1,7 @@
 class RequestHandler < EM::P::HeaderAndContentProtocol
 
   def initialize(options)
+    super
     @tweet_broadcaster = options[:tweet_broadcaster]
   end
 

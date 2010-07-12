@@ -1,6 +1,5 @@
-#!/bin/env ruby
+#!/usr/bin/env ruby
 
-require 'rubygems'
-require 'tweet-multiplexer'
+require File.expand_path(File.dirname(__FILE__) + '/../lib/twitter/balancer')
 
-TweetMultiplexer::Server.start
+Twitter::Balancer::Server.start 8080
