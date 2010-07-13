@@ -8,6 +8,11 @@ class TweetBroadcaster
     @pool_index = 0
   end
 
+  def unsubscribe(client)
+    @channel.unsubscribe(client.signature)
+    @pool.delete(client.signature)
+  end
+
   def subscribe(client)
     @pool << client.signature
     @channel.subscribe do |tweet|

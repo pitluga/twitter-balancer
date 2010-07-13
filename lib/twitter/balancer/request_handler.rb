@@ -16,4 +16,7 @@ class RequestHandler < EM::P::HeaderAndContentProtocol
     @tweet_broadcaster.subscribe(self)
   end
 
+  def unbind
+    @tweet_broadcaster.unsubscribe(self)
+  end
 end
