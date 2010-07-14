@@ -33,6 +33,41 @@ class TweetBroadcasterTest < Test::Unit::TestCase
       end
     end
 
+    should "load balance messages to each of the subscribers" do
+      with_em do
+        stream = StubTwitterStream.new
+        sink_a = DataSink.new
+        sink_b = DataSink.new
+        Twitter::JSONStream.stubs(:connect).returns(stream)
+        broadcaster = TweetBroadcaster.new
+        broadcaster.subscribe(sink_a)
+        broadcaster.subscribe(sink_b)
+        broadcaster.start
+        stream.push_message "hello"
+        stream.push_message "world"
+        assert_equal ["hello", "\r"], sink_b.sent_data
+        assert_equal ["world", "\r"], sink_a.sent_data
+      end
+    end
+
+    should "not load balance to unsubscribed clients" do
+      with_em do
+        stream = StubTwitterStream.new
+        sink_a = DataSink.new
+        sink_b = DataSink.new
+        Twitter::JSONStream.stubs(:connect).returns(stream)
+        broadcaster = TweetBroadcaster.new
+        broadcaster.subscribe(sink_a)
+        broadcaster.subscribe(sink_b)
+        broadcaster.unsubscribe(sink_b)
+        broadcaster.start
+        stream.push_message "hello"
+        stream.push_message "world"
+        assert_equal ["hello", "\r", "world", "\r"], sink_a.sent_data
+      end
+    end
+
+
     should "log errors"
     should "handle failing reconects, how?"
   end
